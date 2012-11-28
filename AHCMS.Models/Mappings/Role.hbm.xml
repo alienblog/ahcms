@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="AHCMS.Model" namespace="AHCMS.Models">
+  <class name="Role" table="ahcms_roles">
+    <id name="Id">
+      <generator class="guid.comb" />
+    </id>
+    <property name="RoleName" not-null="true" />
+    <bag name="Users">
+      <key column="roleId"/>
+      <many-to-many class="MemberShips" column="userId"/>
+    </bag>
+  </class>
+</hibernate-mapping>

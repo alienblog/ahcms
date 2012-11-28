@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AHCMS.Core", "AHCMS.Core\AHCMS.Core.csproj", "{8D266656-B59A-480B-990D-3F54836FF860}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Schema", "Schema", "{E2089D23-4AF9-4494-8C10-A810019202D5}"
+	ProjectSection(SolutionItems) = preProject
+		AHCMS.Core\Lib\nhibernate-configuration.xsd = AHCMS.Core\Lib\nhibernate-configuration.xsd
+		AHCMS.Core\Lib\nhibernate-mapping.xsd = AHCMS.Core\Lib\nhibernate-mapping.xsd
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{94316C37-C648-469E-AB3D-ED84D5D865B8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AHCMS.Core.Test", "AHCMS.Core.Test\AHCMS.Core.Test.csproj", "{59325E38-CCB4-476C-AA7F-43906F63A5F9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AHCMS", "AHCMS\AHCMS.csproj", "{6978FE2A-22C8-43D3-8539-53D15BD88217}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AHCMS.Models", "AHCMS.Models\AHCMS.Models.csproj", "{61612458-3DD3-4424-8775-58789E20A201}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8D266656-B59A-480B-990D-3F54836FF860}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D266656-B59A-480B-990D-3F54836FF860}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D266656-B59A-480B-990D-3F54836FF860}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D266656-B59A-480B-990D-3F54836FF860}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59325E38-CCB4-476C-AA7F-43906F63A5F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59325E38-CCB4-476C-AA7F-43906F63A5F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59325E38-CCB4-476C-AA7F-43906F63A5F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59325E38-CCB4-476C-AA7F-43906F63A5F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6978FE2A-22C8-43D3-8539-53D15BD88217}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6978FE2A-22C8-43D3-8539-53D15BD88217}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6978FE2A-22C8-43D3-8539-53D15BD88217}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6978FE2A-22C8-43D3-8539-53D15BD88217}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61612458-3DD3-4424-8775-58789E20A201}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61612458-3DD3-4424-8775-58789E20A201}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61612458-3DD3-4424-8775-58789E20A201}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61612458-3DD3-4424-8775-58789E20A201}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{59325E38-CCB4-476C-AA7F-43906F63A5F9} = {94316C37-C648-469E-AB3D-ED84D5D865B8}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="AHCMS.Core" namespace="AHCMS.Core.Models">
+  <class name="ContentType" table="ahcms_contenttype">
+    <id name="Id">
+      <generator class="guid.comb" />
+    </id>
+    <property name="Name" not-null="true"/>
+    <property name="Description" />
+    <bag name="Parts">
+      <key column="TypeId"/>
+      <many-to-many class="ContentPart" column="Id"></many-to-many>
+    </bag>
+    <bag name="Contents">
+      <key column="Id" />
+      <one-to-many class="Content"/>
+    </bag>
+  </class>
+</hibernate-mapping>

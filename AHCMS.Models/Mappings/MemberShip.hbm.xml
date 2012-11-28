@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="AHCMS.Model" namespace="AHCMS.Models">
+  <class name="MemberShip" table="ahcms_memberships">
+    <id name="Id">
+      <generator class="guid.comb" />
+    </id>
+    <property name="CreateDate"/>
+    <property name="ConfirmationToken" length="128"/>
+    <property name="IsConfirmed"/>
+    <property name="LastPasswordFailureDate"/>
+    <property name="PasswordQuestion"/>
+    <property name="QuestionAnswer" length="128"/>
+    <property name="LastAnswerFailureDate"/>
+    <property name="AnswerFailureCount"/>
+    <property name="PasswordFailuresSinceLastSuccess"/>
+    <property name ="Password" length="128" not-null="true"/>
+    <property name="PasswordChangedDate"/>
+    <property name="PasswordSalt"/>
+    <property name="PasswordVerificationToken"/>
+    <property name="PasswordVerificationTokenExpirationDate"/>
+    <property name="IsLockOut"/>
+    <bag name="Roles">
+      <key column="userId" />
+      <many-to-many class="Role" column="roleId"/>
+    </bag>
+    <bag name="Contents">
+      <key column ="UserId" />
+      <one-to-many class="Content"/>
+    </bag>
+    <one-to-one name="User" class="User"/>
+  </class>
+</hibernate-mapping>
