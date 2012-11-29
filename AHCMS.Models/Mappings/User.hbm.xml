@@ -1,10 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="AHCMS.Model" namespace="AHCMS.Models">
-  <class name="User" table="ahcms_user">
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="AHCMS.Models" namespace="AHCMS.Models">
+  <class name="User" table="ahcms_users">
     <id name="UserId">
       <generator class="native" />
     </id>
     <property name="UserName" not-null="true" unique="true" />
     <one-to-one name="MemberShip" class="MemberShip"/>
+    <bag name="Profile">
+      <key column="userId"/>
+      <one-to-many class="UserProfile"/>
+    </bag>
+    <bag name="OAuthMemberShips">
+      <key column="UserId"/>
+      <one-to-many class="OAuthMemberShip"/>
+    </bag>
   </class>
 </hibernate-mapping>

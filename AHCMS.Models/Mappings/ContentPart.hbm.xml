@@ -1,15 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="AHCMS.Core" namespace="AHCMS.Core.Models">
-  <class name="ContentPart" table="ahcms_contentpart">
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="AHCMS.Models" namespace="AHCMS.Models">
+  <class name="ContentPart" table="ahcms_contentparts">
     <id name="Id">
       <generator class="guid.comb" />
     </id>
     <property name="Name" not-null="true"/>
     <property name="Description"/>
     <property name="InputName"/>
-    <bag name="Types">
+    <bag name="Types" table="PartsInTypes">
       <key column="PartId"/>
-      <many-to-many class="ContentType" column="Id"/>
+      <many-to-many class="ContentType" column="TypeId"/>
     </bag>
   </class>
 </hibernate-mapping>

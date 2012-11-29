@@ -44,5 +44,10 @@ namespace AHCMS.Models
         /// 所属用户
         /// </summary>
         public virtual User User { get; set; }
+
+        /// <summary>
+        /// 所属分类
+        /// </summary>
+        public virtual Category Category { get; set; }
     }
 }

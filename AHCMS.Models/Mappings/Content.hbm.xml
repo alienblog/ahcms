@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="AHCMS.Model" namespace="AHCMS.Models">
-  <class name="Content" table="ahcms_content">
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="AHCMS.Models" namespace="AHCMS.Models">
+  <class name="Content" table="ahcms_contents">
     <id name="Id">
       <generator class="guid.comb" />
     </id>
@@ -8,10 +8,11 @@
     <property name="CreateDate" />
     <property name="EditDate" />
     <bag name="Properties">
-      <key column="Id" />
+      <key column="ContentId"/>
       <one-to-many class="ContentProperty"/>
     </bag>
     <many-to-one name="Type" column="TypeId"/>
     <many-to-one name="User" column="UserId"/>
+    <many-to-one name="Category" column="categoryId"/>
   </class>
 </hibernate-mapping>

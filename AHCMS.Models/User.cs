@@ -28,5 +28,15 @@ namespace AHCMS.Models
         /// 账户信息
         /// </summary>
         public virtual MemberShip MemberShip { get; set; }
+
+        /// <summary>
+        /// 用户配置
+        /// </summary>
+        public virtual UserProfile Profile { get; set; }
+
+        /// <summary>
+        /// 用户三方授权信息
+        /// </summary>
+        public virtual ICollection<OAuthMemberShip> OAuthMemberShips { get; set; }
     }
 }

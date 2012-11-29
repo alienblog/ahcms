@@ -8,13 +8,14 @@ namespace AHCMS.Models
     /// <summary>
     /// 账户信息
     /// </summary>
-    public class MemberShip : Entity
+    public class MemberShip
     {
         public MemberShip()
         {
             Roles = new List<Role>();
             Contents = new List<Content>();
         }
+        public virtual int UserId { get; set; }
 
         /// <summary>
         /// 所属用户
