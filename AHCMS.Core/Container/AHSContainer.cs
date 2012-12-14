@@ -35,5 +35,10 @@ namespace AHCMS.Core.Container
         {
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
         }
+
+        public static Repository.IRepository ResolverRepository()
+        {
+            return container.Resolve<Repository.IRepository>();
+        }
     }
 }

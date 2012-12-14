@@ -6,7 +6,7 @@
     </id>
     <property name="UserName" not-null="true" unique="true" />
     <one-to-one name="MemberShip" class="MemberShip"/>
-    <bag name="Profile">
+    <bag name="Profiles">
       <key column="userId"/>
       <one-to-many class="UserProfile"/>
     </bag>

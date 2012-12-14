@@ -5,6 +5,7 @@ using System.Configuration.Provider;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Web.Security;
 using WebMatrix.WebData;
 
 namespace AHCMS.Core.Security
@@ -245,59 +246,116 @@ namespace AHCMS.Core.Security
             return true;
         }
 
+        public override bool HasLocalAccount(int userId)
+        {
+            return new UserService().HasLocalAccount(userId);
+        }
+
         public override string CreateAccount(string userName, string password, bool requireConfirmationToken)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(password))
+            {
+                throw new MembershipCreateUserException(MembershipCreateStatus.InvalidPassword);
+            }
+            var salt = this.GenerateSalt();
+            string hashedPassword = this.EncodePassword(password, this.PasswordFormat, salt);
+            if (hashedPassword.Length > 0x80)
+            {
+                throw new MembershipCreateUserException(MembershipCreateStatus.InvalidPassword);
+            }
+            if (string.IsNullOrEmpty(userName))
+            {
+                throw new MembershipCreateUserException(MembershipCreateStatus.InvalidUserName);
+            }
+            return new UserService().CreateAccount(userName, password, salt, requireConfirmationToken);
         }
 
         public override string CreateUserAndAccount(string userName, string password, bool requireConfirmation, IDictionary<string, object> values)
         {
-            throw new NotImplementedException();
+            var user = new User();
+            user.UserName = userName;
+            foreach (var value in values)
+            {
+                user.Profiles.Add(new UserProfile
+                {
+                    ProfileKey = value.Key,
+                    ProfileValue = value.Value.ToString()
+                });
+            }
+            new UserService().CreateUser(user);
+            return this.CreateAccount(userName, password);
         }
 
         public override bool DeleteAccount(string userName)
         {
-            throw new NotImplementedException();
+            return new UserService().DeleteAccount(userName);
         }
 
         public override string GeneratePasswordResetToken(string userName, int tokenExpirationInMinutesFromNow)
         {
-            throw new NotImplementedException();
+            var user = new UserService().GetUser(userName);
+            if (user == null || user.MemberShip == null)
+            {
+                throw new ProviderException("本地帐号不存在");
+            }
+            if (user.MemberShip.PasswordVerificationTokenExpirationDate > DateTime.UtcNow)
+            {
+                return user.MemberShip.PasswordVerificationToken;
+            }
+            string token = UserService.GenerateToken();
+            user.MemberShip.PasswordVerificationToken = token;
+            user.MemberShip.PasswordVerificationTokenExpirationDate = DateTime.UtcNow.AddMinutes((double)tokenExpirationInMinutesFromNow);
+            new UserService().UpdateMemberShip(user.MemberShip);
+            return token;
         }
 
         public override ICollection<OAuthAccountData> GetAccountsForUser(string userName)
         {
-            throw new NotImplementedException();
+            var user = new UserService().GetUser(userName);
+            if (user == null)
+            {
+                throw new ProviderException("用户不存在");
+            }
+            List<OAuthAccountData> oalist = new List<OAuthAccountData>();
+            user.OAuthMemberShips.ToList().ForEach(o =>
+            {
+                oalist.Add(new OAuthAccountData(o.Provider, o.ProviderUserId));
+            });
+            return oalist;
         }
 
         public override DateTime GetCreateDate(string userName)
         {
-            throw new NotImplementedException();
+            var user = new UserService().GetUser(userName);
+            return user.MemberShip.CreateDate;
         }
 
         public override DateTime GetLastPasswordFailureDate(string userName)
         {
-            throw new NotImplementedException();
+            var user = new UserService().GetUser(userName);
+            return user.MemberShip.LastPasswordFailureDate;
         }
 
         public override DateTime GetPasswordChangedDate(string userName)
         {
-            throw new NotImplementedException();
+            var user = new UserService().GetUser(userName);
+            return user.MemberShip.PasswordChangedDate;
         }
 
         public override int GetPasswordFailuresSinceLastSuccess(string userName)
         {
-            throw new NotImplementedException();
+            var user = new UserService().GetUser(userName);
+            return user.MemberShip.PasswordFailuresSinceLastSuccess;
         }
 
         public override int GetUserIdFromPasswordResetToken(string token)
         {
-            throw new NotImplementedException();
+            return new UserService().GetUserIdFromPasswordResetToken(token);
         }
 
         public override bool IsConfirmed(string userName)
         {
-            throw new NotImplementedException();
+            return new UserService().IsConfirmed(userName);
         }
 
         public override bool ResetPasswordWithToken(string token, string newPassword)
@@ -307,22 +365,43 @@ namespace AHCMS.Core.Security
 
         public override bool ChangePassword(string username, string oldPassword, string newPassword)
         {
-            throw new NotImplementedException();
+            if (ValidateUser(username, oldPassword))
+            {
+                var user = new UserService().GetUser(username);
+                user.MemberShip.Password = EncodePassword(newPassword, this.PasswordFormat, user.MemberShip.PasswordSalt);
+                new UserService().UpdateMemberShip(user.MemberShip);
+            }
+            return false;
         }
 
         public override bool ChangePasswordQuestionAndAnswer(string username, string password, string newPasswordQuestion, string newPasswordAnswer)
         {
-            throw new NotImplementedException();
+            if (ValidateUser(username, password))
+            {
+                var user = new UserService().GetUser(username);
+                user.MemberShip.PasswordQuestion = newPasswordQuestion;
+                user.MemberShip.QuestionAnswer = EncodePassword(newPasswordAnswer, this.PasswordFormat, user.MemberShip.PasswordSalt);
+                new UserService().UpdateMemberShip(user.MemberShip);
+                return true;
+            }
+            return false;
         }
 
         public override System.Web.Security.MembershipUser CreateUser(string username, string password, string email, string passwordQuestion, string passwordAnswer, bool isApproved, object providerUserKey, out System.Web.Security.MembershipCreateStatus status)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException();    
         }
 
         public override bool DeleteUser(string username, bool deleteAllRelatedData)
         {
-            throw new NotImplementedException();
+            var service = new UserService();
+            var user = service.GetUser(username);
+            if (user == null)
+                return false;
+            if (deleteAllRelatedData)
+                service.DeleteAccount(username);
+            service.DeleteUser(user);
+            return true;
         }
 
         public override System.Web.Security.MembershipUserCollection FindUsersByEmail(string emailToMatch, int pageIndex, int pageSize, out int totalRecords)
@@ -351,7 +430,7 @@ namespace AHCMS.Core.Security
         }
 
         public override System.Web.Security.MembershipUser GetUser(string username, bool userIsOnline)
-        {
+        { 
             throw new NotImplementedException();
         }
 
@@ -362,7 +441,10 @@ namespace AHCMS.Core.Security
 
         public override string GetUserNameByEmail(string email)
         {
-            throw new NotImplementedException();
+            var user = new UserService().GetUser(email);
+            if(user==null)
+                return string.Empty;
+            return user.UserName;
         }
 
         public override string ResetPassword(string username, string answer)
@@ -372,7 +454,12 @@ namespace AHCMS.Core.Security
 
         public override bool UnlockUser(string userName)
         {
-            throw new NotImplementedException();
+            var user = new UserService().GetUser(userName);
+            if (user == null)
+                return false;
+            user.MemberShip.IsLockOut = false;
+            new UserService().UpdateMemberShip(user.MemberShip);
+            return true;
         }
 
         public override void UpdateUser(System.Web.Security.MembershipUser user)
@@ -382,7 +469,10 @@ namespace AHCMS.Core.Security
 
         public override bool ValidateUser(string username, string password)
         {
-            throw new NotImplementedException();
+            var user = new UserService().GetUser(username);
+            if (user == null) return false;
+            string pwd = EncodePassword(password, this.PasswordFormat, user.MemberShip.PasswordSalt);
+            return pwd == user.MemberShip.Password;
         }
         #endregion
 
@@ -587,7 +677,6 @@ namespace AHCMS.Core.Security
             string pass;
             int failedPasswordAttemptCount;
             int failedPasswordAnswerAttemptCount;
-            bool isApproved;
             DateTime lastLoginDate;
             DateTime lastActivityDate;
 
@@ -659,6 +748,30 @@ namespace AHCMS.Core.Security
 
                 status = 1;
             }
+        }
+
+        public User MemberShipUserToUserEntity(MembershipUser mu)
+        {
+            User u = new User();
+            u.UserName = mu.UserName;
+            u.UserId = (int)mu.ProviderUserKey;
+            u.MemberShip.PasswordQuestion = mu.PasswordQuestion;
+            u.MemberShip.CreateDate = mu.CreationDate;
+            u.MemberShip.PasswordChangedDate = mu.LastPasswordChangedDate;
+            u.MemberShip.LastActivityDate = mu.LastActivityDate;
+            u.MemberShip.LastLoginDate = mu.LastLoginDate;
+            u.MemberShip.IsLockOut = mu.IsLockedOut;
+            
+            return u;
+        }
+
+        public MembershipUser UserEntityToMemberShipUser(User u)
+        {
+            MembershipUser user = new MembershipUser(u.UserName, u.UserName, u.UserId, u.UserName,
+                u.MemberShip.PasswordQuestion, "", true, u.MemberShip.IsLockOut, u.MemberShip.CreateDate,
+                u.MemberShip.LastLoginDate, u.MemberShip.LastActivityDate, u.MemberShip.PasswordChangedDate,
+                u.MemberShip.LastActivityDate);
+            return user;
         }
 
         private string GetExceptionText(int status)

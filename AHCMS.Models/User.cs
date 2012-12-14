@@ -32,7 +32,7 @@ namespace AHCMS.Models
         /// <summary>
         /// 用户配置
         /// </summary>
-        public virtual UserProfile Profile { get; set; }
+        public virtual ICollection<UserProfile> Profiles { get; set; }
 
         /// <summary>
         /// 用户三方授权信息

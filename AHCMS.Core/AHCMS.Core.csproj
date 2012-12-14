@@ -118,6 +118,7 @@
     <Compile Include="Repository\Transaction.cs" />
     <Compile Include="Security\AHMemberShipProvider.cs" />
     <Compile Include="Security\AHRoleProvider.cs" />
+    <Compile Include="Security\RoleService.cs" />
     <Compile Include="Security\SecUtility.cs" />
     <Compile Include="Security\UserService.cs" />
   </ItemGroup>

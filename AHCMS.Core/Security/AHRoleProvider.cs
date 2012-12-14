@@ -10,7 +10,7 @@ namespace AHCMS.Core.Security
     {
         public override void AddUsersToRoles(string[] usernames, string[] roleNames)
         {
-            throw new NotImplementedException();
+            
         }
 
         public override string ApplicationName
