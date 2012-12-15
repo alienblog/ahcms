@@ -10,64 +10,62 @@ namespace AHCMS.Core.Security
     {
         public override void AddUsersToRoles(string[] usernames, string[] roleNames)
         {
-            
+            var service = new RoleService();
+            foreach (var item in usernames)
+            {
+                service.AddRolesToUser(roleNames, item);
+            }
         }
 
         public override string ApplicationName
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
+            get;
+            set;
         }
 
         public override void CreateRole(string roleName)
         {
-            throw new NotImplementedException();
+            new RoleService().CreateRole(roleName);
         }
 
         public override bool DeleteRole(string roleName, bool throwOnPopulatedRole)
         {
-            throw new NotImplementedException();
+            return new RoleService().DeleteRole(roleName, throwOnPopulatedRole);
         }
 
         public override string[] FindUsersInRole(string roleName, string usernameToMatch)
         {
-            throw new NotImplementedException();
+            return new RoleService().FindUsersInRole(roleName, usernameToMatch);
         }
 
         public override string[] GetAllRoles()
         {
-            throw new NotImplementedException();
+            return new RoleService().GetAllRoles();
         }
 
         public override string[] GetRolesForUser(string username)
         {
-            throw new NotImplementedException();
+            return new RoleService().GetRolesFromUser(username);
         }
 
         public override string[] GetUsersInRole(string roleName)
         {
-            throw new NotImplementedException();
+            return new RoleService().GetUsersFromRole(roleName);
         }
 
         public override bool IsUserInRole(string username, string roleName)
         {
-            throw new NotImplementedException();
+            return new RoleService().IsUserInRole(username, roleName);
         }
 
         public override void RemoveUsersFromRoles(string[] usernames, string[] roleNames)
         {
-            throw new NotImplementedException();
+            new RoleService().RemoveUsersFromRoles(usernames, roleNames);
         }
 
         public override bool RoleExists(string roleName)
         {
-            throw new NotImplementedException();
+            return new RoleService().RoleExists(roleName);
         }
     }
 }
